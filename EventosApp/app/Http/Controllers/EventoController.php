@@ -8,49 +8,64 @@ use App\Models\Evento;
 
 class EventoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $eventos = Evento::orderBy('nombreEvento')->paginate(10);
+        return view('eventos.eventos', ['lista_eventos' => $eventos]);
+    }
+    public function evento(Evento $evento)
+    {
+        return view('eventos.evento', ['evento' => $evento]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        // Verificar si el usuario puede crear más eventos
+        if (Auth::user()->remaining_events <= 0) {
+            return view('eventos.limit-reached');
+        }
+        return view('eventos.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreEventoRequest $request)
     {
-        //
-    }
+        // Validar que el usuario tenga eventos disponibles
+        if (Auth::user()->remaining_events <= 0) {
+            return redirect()->route('eventos.create')
+                ->with('error', 'Se han terminado el número máximo de creaciones por usuario, póngase en contacto con el administrador de la aplicación');
+        }
+        
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'nombreEvento' => 'required|max:255',
+            'fechaInicio' => 'nullable|date',
+            'fechaFin' => 'nullable|date|after_or_equal:fechaInicio',
+            'tipo' => 'nullable|in:reunión,conferencia,taller,presentación,concierto',
+            'participantes' => 'nullable|integer|min:1|max:15',
+            'descripcion' => 'nullable',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
+        // Crear el evento
+        Event::create($validatedData);
+
+        // Decrementar el contador de eventos disponibles
+        $user = Auth::user();
+        $user->remaining_events -= 1;
+        $user->save();
+
+        return redirect()->route('eventos.index')
+            ->with('success', 'Evento creado exitosamente');
+    }
     public function show(Evento $evento)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Evento $evento)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateEventoRequest $request, Evento $evento)
     {
         //
