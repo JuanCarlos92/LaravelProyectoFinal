@@ -8,6 +8,16 @@
     <div class="max-w-4xl mx-auto mt-6">
         <h1 style="font-size: 48px; font-weight: bold; text-align: center; padding: 20px; border-radius: 10px;">{{$evento->nombreEvento}}</h1>
     </div>
+
+    <ul>
+        <li class="mb-6 w-full flex justify-center">
+            <a href="{{ route('eventos') }}" 
+               class="px-6 py-3 bg-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition">
+                Volver a la lista de eventos
+            </a>
+        </li>
+    </ul>
+
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <table class="w-full border border-gray-300 rounded-lg shadow-lg">
@@ -37,10 +47,11 @@
             </main>
         </div>
     </div>
+    @auth
     <div class="mb-6 w-full flex justify-center">
         <a href="{{ route('editar', $evento) }}" 
-        class="px-6 py-3 bg-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition">
-        Editar evento
+            class="px-6 py-3 bg-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition">
+            Editar evento
         </a>
     </div>
     <form action="{{route('delete', $evento)}}" method="POST" class="w-full flex justify-center mb-6">
@@ -49,7 +60,8 @@
         <button type="submit" class="px-6 py-3 bg-red-600 font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition">
         Eliminar Evento
         </button>
-    </form>    
+    </form>
+    @endauth
 @endsection
 
 

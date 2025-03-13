@@ -21,7 +21,7 @@ class EventoFactory extends Factory
             'fechaInicio' => $this->faker->date(),
             'fechaFin' => $this->faker->date(),
             'tipo' => $this->faker->randomElement(['reunión', 'conferencia', 'taller', 'presentación', 'concierto']),
-            'participantes' => $this->faker->numberBetween(10, 500),
+            'participantes' => $this->faker->numberBetween(1, 15),
             'descripcion' => $this->faker->paragraph(),
             'created_at' => now(),
             'updated_at' => now(),

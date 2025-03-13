@@ -10,6 +10,18 @@
         Crear nuevo evento
     </h1>
 </div>
+
+@if(isset($error))
+    <div style="color: red; text-align: center; font-weight: bold; padding: 10px;">
+        <h1>{{ $error }}</h1>
+    </div>
+@endif
+@if(session('error'))
+    <div style="color: red; text-align: center; font-weight: bold; padding: 10px;">
+        <h1>{{ session('error') }}</h1>
+    </div>
+@endif
+
 <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
     <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
         <form action="{{route('agregar')}}" method="POST">

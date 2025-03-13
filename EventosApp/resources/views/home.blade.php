@@ -12,7 +12,12 @@
     </div>
     <nav>
         <ul>
-            <li><a href={{route('eventos')}}>Mostrar Lista de Eventos</a></li>
+            <li class="mb-6 w-full flex justify-center">
+                <a href="{{ route('eventos') }}" 
+                   class="px-6 py-3 bg-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition">
+                    Mostrar Lista de Eventos
+                </a>
+            </li>
         </ul>
     </nav>
     <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
