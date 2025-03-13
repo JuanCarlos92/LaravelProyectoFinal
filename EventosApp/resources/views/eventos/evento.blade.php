@@ -37,6 +37,19 @@
             </main>
         </div>
     </div>
+    <div class="mb-6 w-full flex justify-center">
+        <a href="{{ route('editar', $evento) }}" 
+        class="px-6 py-3 bg-blue-600 font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition">
+        Editar evento
+        </a>
+    </div>
+    <form action="{{route('delete', $evento)}}" method="POST" class="w-full flex justify-center mb-6">
+        @method('delete')
+        @csrf
+        <button type="submit" class="px-6 py-3 bg-red-600 font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition">
+        Eliminar Evento
+        </button>
+    </form>    
 @endsection
 
 

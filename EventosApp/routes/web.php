@@ -5,12 +5,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\Controller;
 
+
 Route::get('/', function () {
     return view(view: 'home');
 });
 
 Route::get('eventos', [EventoController::class, 'index'])->name('eventos');
-Route::get('evento/{evento}', [EventoController::class, 'evento'])->name('evento');
+Route::get('eventos/{evento}', [EventoController::class, 'evento'])->name('evento');
+Route::get('create', [EventoController::class, 'crear'])->name('crear');
+Route::post("eventos/agregar", [EventoController::class, 'agregar'])->name('agregar');
+Route::get("update/{evento}", [EventoController::class, 'editar'])->name('editar');
+Route::put('eventos/actualizar',[EventoController::class,'actualizar'])->name('actualizar');
+Route::delete("delete/{evento}", [EventoController::class, 'delete'])->name('delete');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

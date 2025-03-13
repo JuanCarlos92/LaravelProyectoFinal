@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
 use App\Models\Evento;
+use Illuminate\Http\Request;
 
 class EventoController extends Controller
 {
@@ -18,64 +20,51 @@ class EventoController extends Controller
         return view('eventos.evento', ['evento' => $evento]);
     }
 
-    public function create()
+    public function crear()
     {
         // Verificar si el usuario puede crear más eventos
-        if (Auth::user()->remaining_events <= 0) {
-            return view('eventos.limit-reached');
-        }
-        return view('eventos.create');
+        //if (Auth::user()->remaining_events <= 0) {
+        //    return view('eventos.limit-reached');
+        //}
+        return view('eventos.crear');
     }
 
-    public function store(StoreEventoRequest $request)
+public function agregar(Request $datosRecibidos)
+{
+    $evento = new Evento();
+    $evento->nombreEvento = $datosRecibidos->nombreEvento;
+    $evento->fechaInicio = Carbon::createFromFormat('Y-m-d', $datosRecibidos->fechaInicio)->format('Y-m-d');
+    $evento->fechaFin = Carbon::createFromFormat('Y-m-d', $datosRecibidos->fechaFin)->format('Y-m-d');
+    $evento->tipo = $datosRecibidos->tipo;
+    $evento->participantes = $datosRecibidos->participantes;
+    $evento->descripcion = $datosRecibidos->descripcion;
+
+    $evento->save();
+
+    return redirect()->route('evento', $evento);
+}
+public function editar(Evento $evento){
+    return view('eventos.editar', ['evento' => $evento]);
+}
+
+public function actualizar(Evento $evento, Request $datosRecibidos)
+{
+    
+    $evento->nombreEvento = $datosRecibidos->nombreEvento;
+    $evento->fechaInicio = Carbon::createFromFormat('Y-m-d', $datosRecibidos->fechaInicio)->format('Y-m-d');
+    $evento->fechaFin = Carbon::createFromFormat('Y-m-d', $datosRecibidos->fechaFin)->format('Y-m-d');
+    $evento->tipo = $datosRecibidos->tipo;
+    $evento->participantes = $datosRecibidos->participantes;
+    $evento->descripcion = $datosRecibidos->descripcion;
+
+    $evento->save();
+
+    return redirect()->route('evento', $evento);
+}
+
+    public function delete(Evento $evento)
     {
-        // Validar que el usuario tenga eventos disponibles
-        if (Auth::user()->remaining_events <= 0) {
-            return redirect()->route('eventos.create')
-                ->with('error', 'Se han terminado el número máximo de creaciones por usuario, póngase en contacto con el administrador de la aplicación');
-        }
-        
-        // Validar los datos del formulario
-        $validatedData = $request->validate([
-            'nombreEvento' => 'required|max:255',
-            'fechaInicio' => 'nullable|date',
-            'fechaFin' => 'nullable|date|after_or_equal:fechaInicio',
-            'tipo' => 'nullable|in:reunión,conferencia,taller,presentación,concierto',
-            'participantes' => 'nullable|integer|min:1|max:15',
-            'descripcion' => 'nullable',
-        ]);
-
-        // Crear el evento
-        Event::create($validatedData);
-
-        // Decrementar el contador de eventos disponibles
-        $user = Auth::user();
-        $user->remaining_events -= 1;
-        $user->save();
-
-        return redirect()->route('eventos.index')
-            ->with('success', 'Evento creado exitosamente');
-    }
-    public function show(Evento $evento)
-    {
-        //
-    }
-
-    public function edit(Evento $evento)
-    {
-        //
-    }
-
-    public function update(UpdateEventoRequest $request, Evento $evento)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Evento $evento)
-    {
-        //
+        $evento->delete();
+        return redirect()-> route('eventos');
     }
 }
